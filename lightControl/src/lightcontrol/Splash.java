@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javafx.scene.layout.Border;
 import javax.swing.Timer;
 
 public class Splash extends javax.swing.JFrame {
@@ -16,6 +17,7 @@ public class Splash extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
         setLocationRelativeTo(null);
+        setResizable(false);
         setBackground(mTransparent);
         
         ImageDecore fondo = new ImageDecore(paneBackground, "/image/bulbLoading.png");
@@ -24,6 +26,8 @@ public class Splash extends javax.swing.JFrame {
         paneBackground.setBorder(null);
         paneBackground.setBackground(mTransparent);
         
+        pbLoad.setBackground(mTransparent);
+        pbLoad.setBorder(null);
         initProgressBar();
     }
 
@@ -37,7 +41,6 @@ public class Splash extends javax.swing.JFrame {
     private void initComponents() {
 
         paneBackground = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         pbLoad = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -53,32 +56,25 @@ public class Splash extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Light Control");
+        pbLoad.setBackground(new java.awt.Color(255, 255, 255));
+        pbLoad.setForeground(java.awt.Color.orange);
+        pbLoad.setString("");
 
         javax.swing.GroupLayout paneBackgroundLayout = new javax.swing.GroupLayout(paneBackground);
         paneBackground.setLayout(paneBackgroundLayout);
         paneBackgroundLayout.setHorizontalGroup(
             paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneBackgroundLayout.createSequentialGroup()
-                .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paneBackgroundLayout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(pbLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(paneBackgroundLayout.createSequentialGroup()
-                        .addGap(141, 141, 141)
-                        .addComponent(jLabel1)))
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addGap(110, 110, 110)
+                .addComponent(pbLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(111, Short.MAX_VALUE))
         );
         paneBackgroundLayout.setVerticalGroup(
             paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBackgroundLayout.createSequentialGroup()
                 .addContainerGap(211, Short.MAX_VALUE)
                 .addComponent(pbLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addGap(107, 107, 107))
+                .addGap(140, 140, 140))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -118,39 +114,15 @@ public class Splash extends javax.swing.JFrame {
     private void initProgressBar(){
         Timer mTimer = new Timer(45, (ActionEvent ae) -> {
             pbLoad.setValue(pbLoad.getValue() + 1);
-            pbLoad.setBackground(Color.ORANGE);
+            pbLoad.setBackground(mTransparent);
             pbLoad.setStringPainted(true);
-            pbLoad.setString("Loading... "+ pbLoad.getValue() + "%");
+            pbLoad.setString("Ligh control.. "+ pbLoad.getValue() + "%");
         });
         mTimer.start();
     }
     
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Splash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Splash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Splash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Splash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Splash().setVisible(true);
@@ -159,7 +131,6 @@ public class Splash extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel paneBackground;
     private javax.swing.JProgressBar pbLoad;
     // End of variables declaration//GEN-END:variables

@@ -1,10 +1,16 @@
 package lightcontrol;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 public class Login extends javax.swing.JFrame {
 
+    ImageDecore btnLogin;
     private Color mTransparent;
     private Point mpoint;
 
@@ -12,9 +18,10 @@ public class Login extends javax.swing.JFrame {
         mTransparent = new Color(0,0,0,0);
         setUndecorated(true);
         initComponents();
+        setResizable(false);
         setLocationRelativeTo(null);
         setBackground(mTransparent);
-        
+                        
         ImageDecore fondo = new ImageDecore(paneBackground, "/image/loginBackground.png");
         paneBackground.add(fondo).repaint();
         paneBackground.setOpaque(false);
@@ -25,7 +32,23 @@ public class Login extends javax.swing.JFrame {
         paneClose.add(close).repaint();
         paneClose.setOpaque(false);
         paneClose.setBorder(null);
-        paneClose.setBackground(mTransparent);  
+        paneClose.setBackground(mTransparent);
+        
+        ImageDecore user = new ImageDecore(paneUser, "/image/loginUser.png");
+        paneUser.add(user).repaint();
+        paneUser.setOpaque(false);
+        paneUser.setBorder(null);
+        paneUser.setBackground(mTransparent); 
+        
+        txtUser.setBorder(null); 
+        txtUser.requestFocus();
+        txtPassword.setBorder(null);
+        
+        btnLogin = new ImageDecore(paneButton, "/image/btnLogin.png");
+        paneButton.add(btnLogin).repaint();
+        paneButton.setOpaque(false);
+        paneButton.setBorder(null);
+        paneButton.setBackground(mTransparent); 
     }
 
     /**
@@ -38,15 +61,17 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         paneBackground = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         paneClose = new javax.swing.JPanel();
+        paneUser = new javax.swing.JPanel();
         txtUser = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JTextField();
+        txtPassword = new javax.swing.JPasswordField();
+        paneButton = new javax.swing.JPanel();
+        btnRegistro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(410, 410));
 
+        paneBackground.setPreferredSize(new java.awt.Dimension(400, 400));
         paneBackground.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 paneBackgroundMouseDragged(evt);
@@ -58,10 +83,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Login");
-
+        paneClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         paneClose.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 paneCloseMouseClicked(evt);
@@ -79,67 +101,119 @@ public class Login extends javax.swing.JFrame {
             .addGap(0, 20, Short.MAX_VALUE)
         );
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Usuario");
+        txtUser.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtUser.setForeground(new java.awt.Color(0, 0, 102));
 
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Contraseña");
+        txtPassword.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtPassword.setForeground(new java.awt.Color(0, 0, 102));
+
+        javax.swing.GroupLayout paneUserLayout = new javax.swing.GroupLayout(paneUser);
+        paneUser.setLayout(paneUserLayout);
+        paneUserLayout.setHorizontalGroup(
+            paneUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneUserLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(paneUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        paneUserLayout.setVerticalGroup(
+            paneUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneUserLayout.createSequentialGroup()
+                .addContainerGap(90, Short.MAX_VALUE)
+                .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
+        );
+
+        paneButton.setToolTipText("Log in");
+        paneButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        paneButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                paneButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                paneButtonMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                paneButtonMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                paneButtonMouseReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout paneButtonLayout = new javax.swing.GroupLayout(paneButton);
+        paneButton.setLayout(paneButtonLayout);
+        paneButtonLayout.setHorizontalGroup(
+            paneButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 75, Short.MAX_VALUE)
+        );
+        paneButtonLayout.setVerticalGroup(
+            paneButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        btnRegistro.setBackground(new Color(0,0,0,0));
+        btnRegistro.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        btnRegistro.setForeground(new java.awt.Color(255, 255, 255));
+        btnRegistro.setText("Register now");
+        btnRegistro.setToolTipText("New user");
+        btnRegistro.setBorder(null);
+        btnRegistro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRegistro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnRegistroMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout paneBackgroundLayout = new javax.swing.GroupLayout(paneBackground);
         paneBackground.setLayout(paneBackgroundLayout);
         paneBackgroundLayout.setHorizontalGroup(
             paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBackgroundLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(paneClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77))
             .addGroup(paneBackgroundLayout.createSequentialGroup()
-                .addGap(101, 101, 101)
-                .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(paneBackgroundLayout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBackgroundLayout.createSequentialGroup()
-                        .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtUser)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(133, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(btnRegistro)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(paneButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(paneBackgroundLayout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(paneUser, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(56, 213, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBackgroundLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(paneClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(109, 109, 109))
         );
         paneBackgroundLayout.setVerticalGroup(
             paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneBackgroundLayout.createSequentialGroup()
-                .addGap(66, 66, 66)
+                .addGap(62, 62, 62)
                 .addComponent(paneClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jLabel1)
-                .addGap(30, 30, 30)
-                .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                .addGap(14, 14, 14)
+                .addComponent(paneUser, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(paneButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistro))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paneBackground, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(paneBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(paneBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         pack();
@@ -166,6 +240,46 @@ public class Login extends javax.swing.JFrame {
     private void paneCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paneCloseMouseClicked
         System.exit(0);
     }//GEN-LAST:event_paneCloseMouseClicked
+
+    private void paneButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paneButtonMouseEntered
+        btnLogin.setVisible(false);
+        btnLogin = new ImageDecore(paneButton, "/image/btnLogin2.png");
+        paneButton.add(btnLogin).repaint();
+        paneButton.setOpaque(false);
+        paneButton.setBorder(null);
+        paneButton.setBackground(mTransparent); 
+    }//GEN-LAST:event_paneButtonMouseEntered
+
+    private void paneButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paneButtonMouseExited
+        btnLogin.setVisible(false);
+        btnLogin = new ImageDecore(paneButton, "/image/btnLogin.png");
+        paneButton.add(btnLogin).repaint();
+        paneButton.setOpaque(false);
+        paneButton.setBorder(null);
+        paneButton.setBackground(mTransparent); 
+    }//GEN-LAST:event_paneButtonMouseExited
+
+    private void paneButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paneButtonMousePressed
+        btnLogin.setVisible(false);
+        btnLogin = new ImageDecore(paneButton, "/image/btnLogin.png");
+        paneButton.add(btnLogin).repaint();
+        paneButton.setOpaque(false);
+        paneButton.setBorder(null);
+        paneButton.setBackground(mTransparent); 
+    }//GEN-LAST:event_paneButtonMousePressed
+
+    private void paneButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paneButtonMouseReleased
+        btnLogin.setVisible(false);
+        btnLogin = new ImageDecore(paneButton, "/image/btnLogin2.png");
+        paneButton.add(btnLogin).repaint();
+        paneButton.setOpaque(false);
+        paneButton.setBorder(null);
+        paneButton.setBackground(mTransparent); 
+    }//GEN-LAST:event_paneButtonMouseReleased
+
+    private void btnRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegistroMouseClicked
+        btnRegistro.setBackground(new Color(14,125,233));
+    }//GEN-LAST:event_btnRegistroMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -200,11 +314,11 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton btnRegistro;
     private javax.swing.JPanel paneBackground;
+    private javax.swing.JPanel paneButton;
     private javax.swing.JPanel paneClose;
+    private javax.swing.JPanel paneUser;
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 public class LightControl {
 
     public static void main(String[] args) {
-        Runnable run = () -> {
+        /*Runnable run = () -> {
             Splash loading = new Splash();
             loading.setVisible(true);
             
@@ -21,7 +21,9 @@ public class LightControl {
             login.setVisible(true);            
         };
         Thread hiloSplash = new Thread(run);
-        hiloSplash.start();
+        hiloSplash.start();*/
+        Login login = new Login();
+        login.setVisible(true);  
     }
     
 }
