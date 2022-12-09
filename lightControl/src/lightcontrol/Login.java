@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
@@ -69,7 +70,6 @@ public class Login extends javax.swing.JFrame {
         btnRegistro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(410, 410));
 
         paneBackground.setPreferredSize(new java.awt.Dimension(400, 400));
         paneBackground.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -131,6 +131,9 @@ public class Login extends javax.swing.JFrame {
         paneButton.setToolTipText("Log in");
         paneButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         paneButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                paneButtonMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 paneButtonMouseEntered(evt);
             }
@@ -174,15 +177,13 @@ public class Login extends javax.swing.JFrame {
         paneBackgroundLayout.setHorizontalGroup(
             paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneBackgroundLayout.createSequentialGroup()
+                .addGap(107, 107, 107)
                 .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(paneBackgroundLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(btnRegistro)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(paneButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(paneBackgroundLayout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(paneUser, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(paneUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(56, 213, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBackgroundLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -195,7 +196,7 @@ public class Login extends javax.swing.JFrame {
                 .addGap(62, 62, 62)
                 .addComponent(paneClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14)
-                .addComponent(paneUser, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(paneUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(paneBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(paneButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -256,7 +257,7 @@ public class Login extends javax.swing.JFrame {
         paneButton.add(btnLogin).repaint();
         paneButton.setOpaque(false);
         paneButton.setBorder(null);
-        paneButton.setBackground(mTransparent); 
+        paneButton.setBackground(mTransparent);    
     }//GEN-LAST:event_paneButtonMouseExited
 
     private void paneButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paneButtonMousePressed
@@ -278,8 +279,24 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_paneButtonMouseReleased
 
     private void btnRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegistroMouseClicked
+        setVisible(false);
         btnRegistro.setBackground(new Color(14,125,233));
+        Registrar nuevo = new Registrar();
+        nuevo.setVisible(true);
     }//GEN-LAST:event_btnRegistroMouseClicked
+
+    private void paneButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paneButtonMouseClicked
+        String user = txtUser.getText();
+        String pass = txtPassword.getText();
+        
+        if(user.equals("marlon.aldana") && pass.equals("123456")){
+            setVisible(false);
+            LightsFrame run = new LightsFrame();
+            run.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(this, "Datos incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_paneButtonMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
