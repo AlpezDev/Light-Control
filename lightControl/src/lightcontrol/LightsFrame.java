@@ -4,6 +4,7 @@ import com.panamahitek.ArduinoException;
 import com.panamahitek.PanamaHitek_Arduino;     //Se importa librería de conexión a Arduino
 import java.awt.Color;
 import java.awt.Point;
+import javax.swing.JOptionPane;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
@@ -27,13 +28,7 @@ public class LightsFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         paneCasa.setBackground(mTransparent);
         setBackground(mTransparent);
-        //Configuración del puerto y velocidad de trabajo del Arduino
-        ino = new PanamaHitek_Arduino();
-        try {
-            ino.arduinoRXTX("COM3", 9600, listener);
-        } catch (ArduinoException ex) {
-            System.out.println(ex.getMessage());
-        }
+        
         //Se pinta el panel que tiene la imagen School
         ImageDecore fondo = new ImageDecore(paneCasa, "/image/escuela.png");
         paneCasa.add(fondo).repaint();
@@ -76,6 +71,17 @@ public class LightsFrame extends javax.swing.JFrame {
         paneAula3.setOpaque(false);
         paneAula3.setBorder(null);
         paneAula3.setBackground(mTransparent);
+        
+        //Configuración del puerto y velocidad de trabajo del Arduino
+        ino = new PanamaHitek_Arduino();
+        try {
+            ino.arduinoRXTX("COM3", 9600, listener);
+        } catch (ArduinoException ex) {
+            if(ex.getMessage().equals("Nomrbe del puerto - COM3; Nombre del método - arduinoRXTX(); Tipo de excepción - Puerto no abierto.")){
+                JOptionPane.showMessageDialog(this, "Asegúrese de conectar el Arduino al puerto correcto", "Puerto desconectado", JOptionPane.ERROR_MESSAGE);
+            }
+            System.out.println(ex.getMessage());
+        }
     }
     
     SerialPortEventListener listener = new SerialPortEventListener() {      //Recepción de datos
@@ -395,39 +401,43 @@ public class LightsFrame extends javax.swing.JFrame {
         if(estado1 == 10){          //Si el led1 esta apagado
             try {
                 ino.sendData("11"); //Envíe por el puesto COM3, encienda led1
+                //y cambie la apariencia de los paneles e imagenes para mostar al usuario que área está encendida.
+                paneCasa.setVisible(false);
+                paneLucesLab.setBackground(Color.YELLOW);
+                paneCasa.setVisible(true);
+
+                aula1.setVisible(false);
+                aula1 = new ImageDecore(paneAula1, "/image/aulaON.png");
+                paneAula1.add(aula1).repaint();
+                paneAula1.setOpaque(false);
+                paneAula1.setBorder(null);
+                paneAula1.setBackground(mTransparent);
+                lblLaboratorio.setForeground(azul); 
             } catch (ArduinoException | SerialPortException ex) {
                 System.out.println(ex.getMessage());
-            }
-            //y cambie la apariencia de los paneles e imagenes para mostar al usuario que área está encendida.
-            paneCasa.setVisible(false);
-            paneLucesLab.setBackground(Color.YELLOW);
-            paneCasa.setVisible(true);
-            
-            aula1.setVisible(false);
-            aula1 = new ImageDecore(paneAula1, "/image/aulaON.png");
-            paneAula1.add(aula1).repaint();
-            paneAula1.setOpaque(false);
-            paneAula1.setBorder(null);
-            paneAula1.setBackground(mTransparent);
-            lblLaboratorio.setForeground(azul);            
+                if(ex.getMessage().equals("Port name - COM3; Method name - writeBytes(); Exception type - Port not opened."))
+                    JOptionPane.showMessageDialog(this, "Conectar cable", "Puerto desconectado", JOptionPane.ERROR_MESSAGE);
+            }                       
         }else if(estado1 == 11){        //Si el led1 esta encendido
             try {
                 ino.sendData("10");     //Envíe por el puesto COM3, apague led1
+                //y cambie la apariencia de los paneles e imagenes para mostar al usuario que área está apagada.
+                paneCasa.setVisible(false);
+                paneLucesLab.setBackground(gris);
+                paneCasa.setVisible(true);
+
+                aula1.setVisible(false);
+                aula1 = new ImageDecore(paneAula1, "/image/aulaOFF.png");
+                paneAula1.add(aula1).repaint();
+                paneAula1.setOpaque(false);
+                paneAula1.setBorder(null);
+                paneAula1.setBackground(mTransparent);  
+                lblLaboratorio.setForeground(gris);
             } catch (ArduinoException | SerialPortException ex) {
                 System.out.println(ex.getMessage());
+                if(ex.getMessage().equals("Port name - COM3; Method name - writeBytes(); Exception type - Port not opened."))
+                    JOptionPane.showMessageDialog(this, "Conectar cable", "Puerto desconectado", JOptionPane.ERROR_MESSAGE);
             }
-            //y cambie la apariencia de los paneles e imagenes para mostar al usuario que área está apagada.
-            paneCasa.setVisible(false);
-            paneLucesLab.setBackground(gris);
-            paneCasa.setVisible(true);
-            
-            aula1.setVisible(false);
-            aula1 = new ImageDecore(paneAula1, "/image/aulaOFF.png");
-            paneAula1.add(aula1).repaint();
-            paneAula1.setOpaque(false);
-            paneAula1.setBorder(null);
-            paneAula1.setBackground(mTransparent);  
-            lblLaboratorio.setForeground(gris);
         }
     }//GEN-LAST:event_paneAula1MouseClicked
     
@@ -436,37 +446,41 @@ public class LightsFrame extends javax.swing.JFrame {
         if(estado2 == 20){
             try {
                 ino.sendData("21");
+                paneCasa.setVisible(false);
+                paneLucesAulas.setBackground(Color.YELLOW);
+                paneCasa.setVisible(true);
+
+                aula2.setVisible(false);
+                aula2 = new ImageDecore(paneAula2, "/image/aulaON.png");
+                paneAula2.add(aula2).repaint();
+                paneAula2.setOpaque(false);
+                paneAula2.setBorder(null);
+                paneAula2.setBackground(mTransparent);  
+                lblAula.setForeground(azul);
             } catch (ArduinoException | SerialPortException ex) {
                 System.out.println(ex.getMessage());
+                if(ex.getMessage().equals("Port name - COM3; Method name - writeBytes(); Exception type - Port not opened."))
+                    JOptionPane.showMessageDialog(this, "Conectar cable", "Puerto desconectado", JOptionPane.ERROR_MESSAGE);
             }
-            paneCasa.setVisible(false);
-            paneLucesAulas.setBackground(Color.YELLOW);
-            paneCasa.setVisible(true);
-            
-            aula2.setVisible(false);
-            aula2 = new ImageDecore(paneAula2, "/image/aulaON.png");
-            paneAula2.add(aula2).repaint();
-            paneAula2.setOpaque(false);
-            paneAula2.setBorder(null);
-            paneAula2.setBackground(mTransparent);  
-            lblAula.setForeground(azul);
         }else if(estado2 == 21){
             try {
                 ino.sendData("20");
+                paneCasa.setVisible(false);
+                paneLucesAulas.setBackground(gris);
+                paneCasa.setVisible(true);
+
+                aula2.setVisible(false);
+                aula2 = new ImageDecore(paneAula2, "/image/aulaOFF.png");
+                paneAula2.add(aula2).repaint();
+                paneAula2.setOpaque(false);
+                paneAula2.setBorder(null);
+                paneAula2.setBackground(mTransparent);    
+                lblAula.setForeground(gris);   
             } catch (ArduinoException | SerialPortException ex) {
                 System.out.println(ex.getMessage());
-            }
-            paneCasa.setVisible(false);
-            paneLucesAulas.setBackground(gris);
-            paneCasa.setVisible(true);
-            
-            aula2.setVisible(false);
-            aula2 = new ImageDecore(paneAula2, "/image/aulaOFF.png");
-            paneAula2.add(aula2).repaint();
-            paneAula2.setOpaque(false);
-            paneAula2.setBorder(null);
-            paneAula2.setBackground(mTransparent);    
-            lblAula.setForeground(gris);          
+                if(ex.getMessage().equals("Port name - COM3; Method name - writeBytes(); Exception type - Port not opened."))
+                    JOptionPane.showMessageDialog(this, "Conectar cable", "Puerto desconectado", JOptionPane.ERROR_MESSAGE);
+            }       
         }
     }//GEN-LAST:event_paneAula2MouseClicked
 
@@ -475,37 +489,41 @@ public class LightsFrame extends javax.swing.JFrame {
         if(estado3 == 30){
             try {
                 ino.sendData("31");
+                paneCasa.setVisible(false);
+                paneLucesOfi.setBackground(Color.YELLOW);
+                paneCasa.setVisible(true);
+
+                aula3.setVisible(false);
+                aula3 = new ImageDecore(paneAula2, "/image/aulaON.png");
+                paneAula3.add(aula3).repaint();
+                paneAula3.setOpaque(false);
+                paneAula3.setBorder(null);
+                paneAula3.setBackground(mTransparent);   
+                lblOficinas.setForeground(azul); 
             } catch (ArduinoException | SerialPortException ex) {
                 System.out.println(ex.getMessage());
-            }
-            paneCasa.setVisible(false);
-            paneLucesOfi.setBackground(Color.YELLOW);
-            paneCasa.setVisible(true);
-            
-            aula3.setVisible(false);
-            aula3 = new ImageDecore(paneAula2, "/image/aulaON.png");
-            paneAula3.add(aula3).repaint();
-            paneAula3.setOpaque(false);
-            paneAula3.setBorder(null);
-            paneAula3.setBackground(mTransparent);   
-            lblOficinas.setForeground(azul);           
+                if(ex.getMessage().equals("Port name - COM3; Method name - writeBytes(); Exception type - Port not opened."))
+                    JOptionPane.showMessageDialog(this, "Conectar cable", "Puerto desconectado", JOptionPane.ERROR_MESSAGE);
+            }          
         }else if(estado3 == 31){
             try {
                 ino.sendData("30");
+                paneCasa.setVisible(false);
+                paneLucesOfi.setBackground(gris);
+                paneCasa.setVisible(true);
+
+                aula3.setVisible(false);
+                aula3 = new ImageDecore(paneAula3, "/image/aulaOFF.png");
+                paneAula3.add(aula3).repaint();
+                paneAula3.setOpaque(false);
+                paneAula3.setBorder(null);
+                paneAula3.setBackground(mTransparent);    
+                lblOficinas.setForeground(gris);  
             } catch (ArduinoException | SerialPortException ex) {
                 System.out.println(ex.getMessage());
-            }
-            paneCasa.setVisible(false);
-            paneLucesOfi.setBackground(gris);
-            paneCasa.setVisible(true);
-            
-            aula3.setVisible(false);
-            aula3 = new ImageDecore(paneAula3, "/image/aulaOFF.png");
-            paneAula3.add(aula3).repaint();
-            paneAula3.setOpaque(false);
-            paneAula3.setBorder(null);
-            paneAula3.setBackground(mTransparent);    
-            lblOficinas.setForeground(gris);       
+                if(ex.getMessage().equals("Port name - COM3; Method name - writeBytes(); Exception type - Port not opened."))
+                    JOptionPane.showMessageDialog(this, "Conectar cable", "Puerto desconectado", JOptionPane.ERROR_MESSAGE);
+            }     
         }
     }//GEN-LAST:event_paneAula3MouseClicked
 

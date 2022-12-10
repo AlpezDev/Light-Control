@@ -4,16 +4,29 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.security.Key;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.xml.bind.DatatypeConverter;
 
 public class Login extends javax.swing.JFrame {
 
     ImageDecore btnLogin;
     private Color mTransparent;
     private Point mpoint;
+    Conexion conexion = new Conexion();
+    PreparedStatement ps;
+    ResultSet rs;
+    CallableStatement cst = null;
+    private static String  ENCRYPT_KEY = "ligt-Contr@l2022";
 
     public Login() {
         mTransparent = new Color(0,0,0,0);
@@ -162,7 +175,7 @@ public class Login extends javax.swing.JFrame {
         btnRegistro.setBackground(new Color(0,0,0,0));
         btnRegistro.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         btnRegistro.setForeground(new java.awt.Color(255, 255, 255));
-        btnRegistro.setText("Register now");
+        btnRegistro.setText("Registrarse");
         btnRegistro.setToolTipText("New user");
         btnRegistro.setBorder(null);
         btnRegistro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -184,7 +197,7 @@ public class Login extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(paneButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(paneUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(56, 213, Short.MAX_VALUE))
+                .addGap(56, 125, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneBackgroundLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(paneClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -208,7 +221,7 @@ public class Login extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paneBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+            .addComponent(paneBackground, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,15 +302,66 @@ public class Login extends javax.swing.JFrame {
         String user = txtUser.getText();
         String pass = txtPassword.getText();
         
-        if(user.equals("marlon.aldana") && pass.equals("123456")){
-            setVisible(false);
-            LightsFrame run = new LightsFrame();
-            run.setVisible(true);
+        //Validación de campos obligatorios en la Basde de Datos
+        if(user.equals("") || pass.equals("")){
+            JOptionPane.showMessageDialog(this, "Ingrese usuario y contraseña", "Campos vacios", JOptionPane.ERROR_MESSAGE);            
         }else{
-            JOptionPane.showMessageDialog(this, "Datos incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+            try{
+                cst = conexion.con.prepareCall("{CALL spLogin (?,?,?,?,?,?)}");
+
+                cst.setString(1,user);
+                cst.setString(2, encript(pass));
+                cst.setString(3, "ligt-Contr@l2022");  
+                //Se define los tipos de los parametros de salida del procedimiento almacenado
+                cst.registerOutParameter(4, java.sql.Types.VARCHAR);
+                cst.registerOutParameter(5, java.sql.Types.VARCHAR);
+                cst.registerOutParameter(6, java.sql.Types.INTEGER);
+                
+                cst.execute();
+                String usuario = cst.getString(4);
+                String password = decrypt(cst.getString(5));
+                int rol = cst.getInt(6);
+                System.out.println(usuario+", "+password+ ", "+rol);
+                if(usuario.equals(user) && password.equals(pass)){
+                    setVisible(false);
+                    LightsFrame run = new LightsFrame();
+                    run.setVisible(true);
+                    JOptionPane.showMessageDialog(this, "Bienvenido a Ligh Control", "Ligh Control", JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrecta", "Datos incorrectos", JOptionPane.ERROR_MESSAGE);
+                }
+            //con.close();
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrecta", "Datos incorrectos", JOptionPane.ERROR_MESSAGE);                
+                System.out.println(e.getMessage());
+            }
         }
     }//GEN-LAST:event_paneButtonMouseClicked
 
+    private static String encript(String text) throws Exception {	
+        Key aesKey = new SecretKeySpec(ENCRYPT_KEY.getBytes(), "AES");
+
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+
+        byte[] encrypted = cipher.doFinal(text.getBytes());
+
+        return DatatypeConverter.printBase64Binary(encrypted);
+    }
+    
+    private static String decrypt(String encrypted) throws Exception {
+        byte[] encryptedBytes = DatatypeConverter.parseBase64Binary(encrypted.replace("\n", "") );
+
+        Key aesKey = new SecretKeySpec(ENCRYPT_KEY.getBytes(), "AES");
+
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, aesKey);
+
+        String decrypted = new String(cipher.doFinal(encryptedBytes));
+
+        return decrypted;
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
