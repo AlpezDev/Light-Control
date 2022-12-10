@@ -2,12 +2,25 @@ package lightcontrol;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.security.Key;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import javax.swing.JOptionPane;
+import javax.xml.bind.DatatypeConverter;
 
 public class Registrar extends javax.swing.JFrame {
     
     private Color mTransparent;
     private Point mpoint;
-
+    Conexion conexion = new Conexion();
+    PreparedStatement ps;
+    ResultSet rs;
+    private static String  ENCRYPT_KEY = "ligt-Contr@l2022";
+    
     public Registrar() {
         mTransparent = new Color(0,0,0,0);
         setUndecorated(true);
@@ -22,6 +35,12 @@ public class Registrar extends javax.swing.JFrame {
         paneClose.setOpaque(false);
         paneClose.setBorder(null);
         paneClose.setBackground(mTransparent);
+        
+        lblCedula.setVisible(false);
+        lblNombres.setVisible(false);
+        lblApellidos.setVisible(false);
+        lblUsuario.setVisible(false);
+        lblContra.setVisible(false);
     }
 
     /**
@@ -39,9 +58,15 @@ public class Registrar extends javax.swing.JFrame {
         txtNombres = new javax.swing.JTextField();
         txtApellidos = new javax.swing.JTextField();
         txtUser = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JTextField();
+        txtPassword = new javax.swing.JPasswordField();
         lblRegistrar = new javax.swing.JLabel();
+        lblContra = new javax.swing.JLabel();
+        lblNombres = new javax.swing.JLabel();
+        lblApellidos = new javax.swing.JLabel();
+        lblCedula = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
+        lblCedula1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -123,11 +148,45 @@ public class Registrar extends javax.swing.JFrame {
         lblRegistrar.setForeground(new java.awt.Color(255, 51, 51));
         lblRegistrar.setText("Registrar");
         lblRegistrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblRegistrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblRegistrarMouseClicked(evt);
+            }
+        });
         jPanel1.add(lblRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(124, 444, 60, 20));
 
+        lblContra.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        lblContra.setForeground(java.awt.Color.red);
+        lblContra.setText("*Contraseña obligatoria");
+        jPanel1.add(lblContra, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 420, -1, 10));
+
+        lblNombres.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        lblNombres.setForeground(java.awt.Color.red);
+        lblNombres.setText("*Ingrese al menos un nombre");
+        jPanel1.add(lblNombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, -1, -1));
+
+        lblApellidos.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        lblApellidos.setForeground(java.awt.Color.red);
+        lblApellidos.setText("*Ingrese un apellido");
+        jPanel1.add(lblApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 315, -1, 10));
+
+        lblCedula.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        lblCedula.setForeground(java.awt.Color.red);
+        lblCedula.setText("*Número de documento obligatorio");
+        jPanel1.add(lblCedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 210, -1, -1));
+
+        lblUsuario.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        lblUsuario.setForeground(java.awt.Color.red);
+        lblUsuario.setText("*Ingrese un nombre de usuario");
+        jPanel1.add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, 10));
+
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/registerUser.png"))); // NOI18N
-        lblFondo.setPreferredSize(new java.awt.Dimension(295, 560));
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 295, 560));
+
+        lblCedula1.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        lblCedula1.setForeground(java.awt.Color.red);
+        lblCedula1.setText("*Campo obligatorio");
+        jPanel1.add(lblCedula1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -165,6 +224,107 @@ public class Registrar extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_paneCloseMouseClicked
 
+    private void lblRegistrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegistrarMouseClicked
+        
+        String cedula = txtCedula.getText();
+        String nombres = txtNombres.getText();
+        String apellidos = txtApellidos.getText();
+        String usuario = txtUser.getText();
+        String contra = txtPassword.getText();
+        String rol = "6";
+        //Validación de campos obligatorios en la Basde de Datos
+        if(cedula.equals("") || nombres.equals("") || apellidos.equals("") || usuario.equals("") || contra.equals("")){
+            JOptionPane.showMessageDialog(this, "Llene los campos marcados en rojo", "Campos vacios", JOptionPane.ERROR_MESSAGE);
+            if(cedula.equals("")){
+                lblCedula.setVisible(true);
+                txtCedula.requestFocus();
+            }else{
+                lblCedula.setVisible(false);
+            }
+            if(nombres.equals("")){
+                lblNombres.setVisible(true);
+                txtNombres.requestFocus();
+            }else{
+                lblNombres.setVisible(false);
+            }
+            if(apellidos.equals("")){
+                lblApellidos.setVisible(true);
+                txtApellidos.requestFocus();
+            }else{
+                lblApellidos.setVisible(false);
+            }
+            if(usuario.equals("")){
+                lblUsuario.setVisible(true);
+                txtUser.requestFocus();
+            }else{
+                lblUsuario.setVisible(false);
+            }
+            if(contra.equals("")){
+                lblContra.setVisible(true);
+                txtPassword.requestFocus();
+            }else{
+                lblContra.setVisible(false);
+            }
+        }else{
+            try{
+                ps = conexion.con.prepareStatement("INSERT INTO tbl_usuario VALUES (?,?,?,?,?,?)");                
+                
+                ps.setString(1, cedula);
+                ps.setString(2, nombres);
+                ps.setString(3, apellidos);
+                ps.setString(4, usuario);
+                ps.setString(5, encript(contra));
+                ps.setString(6, rol);
+
+                int verifica = ps.executeUpdate();
+                if(verifica > 0){
+                    JOptionPane.showMessageDialog(this, "Usuario creado exitosamente.");
+                    limpiarCampos();
+                    setVisible(false);
+                    Login login = new Login();
+                    login.setVisible(true);
+                }else{
+                    JOptionPane.showMessageDialog(this, "El usuario no fué creado.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                //con.close();
+            }catch(Exception e){
+                System.out.println(e);
+            }
+        }
+    }//GEN-LAST:event_lblRegistrarMouseClicked
+
+    public void limpiarCampos(){        // Creamos funcion para limpriar los campos de texto
+        txtCedula.setText("");
+        txtNombres.setText("");
+        txtApellidos.setText("");
+        txtUser.setText("");
+        txtPassword.setText("");      
+    }
+
+    private static String encript(String text) throws Exception {	
+            Key aesKey = new SecretKeySpec(ENCRYPT_KEY.getBytes(), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+
+            byte[] encrypted = cipher.doFinal(text.getBytes());
+
+            return DatatypeConverter.printBase64Binary(encrypted);
+            }
+
+    private static String decrypt(String encrypted) throws Exception {
+            byte[] encryptedBytes = DatatypeConverter.parseBase64Binary(encrypted.replace("\n", "") );
+
+            Key aesKey = new SecretKeySpec(ENCRYPT_KEY.getBytes(), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+
+            String decrypted = new String(cipher.doFinal(encryptedBytes));
+
+            return decrypted;
+            }
+    
     /**
      * @param args the command line arguments
      */
@@ -196,14 +356,27 @@ public class Registrar extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Registrar().setVisible(true);
+                try {
+                    String clave = encript("hola");
+                    String llave = decrypt(clave);
+                    System.out.println(clave+" = "+llave);
+                } catch (Exception ex) {
+                    Logger.getLogger(Registrar.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblApellidos;
+    private javax.swing.JLabel lblCedula;
+    private javax.swing.JLabel lblCedula1;
+    private javax.swing.JLabel lblContra;
     private javax.swing.JLabel lblFondo;
+    private javax.swing.JLabel lblNombres;
     private javax.swing.JLabel lblRegistrar;
+    private javax.swing.JLabel lblUsuario;
     private javax.swing.JPanel paneClose;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtCedula;
